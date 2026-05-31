@@ -1,8 +1,16 @@
-function RecommendPage() {
+import { Link } from "react-router-dom";
+
+import RegisterForm from "@/components/RegisterForm/RegisterForm";
+
+export default function RegisterPage() {
   return (
-    <div>
-      <h1>RecommendPage</h1>
-    </div>
+    <main>
+      <h1>Register</h1>
+      <p>To start using our services, please fill out the registration form.</p>
+
+      <RegisterForm />
+
+      <Link to="/login">Login</Link>
+    </main>
   );
 }
-export default RecommendPage;
