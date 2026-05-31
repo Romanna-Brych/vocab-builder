@@ -9,3 +9,6 @@ export const selectIsLoggedIn = (state: RootState) => state.auth.isLoggedIn;
 export const selectIsLoading = (state: RootState) => state.auth.isLoading;
 
 export const selectIsRefreshing = (state: RootState) => state.auth.isRefreshing;
+
+export const selectIsInitialized = (state: RootState) =>
+  state.auth.isInitialized;

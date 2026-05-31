@@ -1,54 +1,86 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { api, clearAuthHeader, setAuthHeader } from "../../api/api";
+import { api, clearAuthHeader, setAuthHeader } from "@/api/api";
+import type {
+  AuthResponse,
+  CurrentUserResponse,
+  LoginCredentials,
+  LogoutResponse,
+  RegisterCredentials,
+} from "@/types/auth";
+import type { RootState } from "../store";
 
-type RegisterCredentials = {
-  name: string;
-  email: string;
-  password: string;
-};
-
-type LoginCredentials = {
-  email: string;
-  password: string;
-};
-
-export const register = createAsyncThunk(
+export const register = createAsyncThunk<AuthResponse, RegisterCredentials>(
   "auth/register",
-  async (credentials: RegisterCredentials, thunkAPI) => {
+  async (credentials, thunkAPI) => {
     try {
-      const { data } = await api.post("/users/signup", credentials);
+      const { data } = await api.post<AuthResponse>(
+        "/users/signup",
+        credentials,
+      );
 
       setAuthHeader(data.token);
 
       return data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+    } catch {
+      return thunkAPI.rejectWithValue("Request failed");
     }
   },
 );
 
-export const login = createAsyncThunk(
+export const login = createAsyncThunk<AuthResponse, LoginCredentials>(
   "auth/login",
-  async (credentials: LoginCredentials, thunkAPI) => {
+  async (credentials, thunkAPI) => {
     try {
-      const { data } = await api.post("/users/signin", credentials);
+      const { data } = await api.post<AuthResponse>(
+        "/users/signin",
+        credentials,
+      );
 
       setAuthHeader(data.token);
 
       return data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+    } catch {
+      return thunkAPI.rejectWithValue("Request failed");
     }
   },
 );
 
-export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
-  try {
-    await api.post("/users/signout");
+export const refreshUser = createAsyncThunk<
+  CurrentUserResponse,
+  void,
+  { state: RootState }
+>("auth/refreshUser", async (_, thunkAPI) => {
+  const state = thunkAPI.getState();
+  const token = state.auth.token;
 
-    clearAuthHeader();
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error);
+  if (!token) {
+    return thunkAPI.rejectWithValue("No token");
+  }
+
+  try {
+    setAuthHeader(token);
+
+    const { data } = await api.get<CurrentUserResponse>("/users/current");
+
+    return data;
+  } catch {
+    return thunkAPI.rejectWithValue("Request failed");
   }
 });
+
+export const logout = createAsyncThunk<LogoutResponse>(
+  "auth/logout",
+  async (_, thunkAPI) => {
+    try {
+      const { data } = await api.post<LogoutResponse>("/users/signout");
+
+      clearAuthHeader();
+
+      return data;
+    } catch {
+      clearAuthHeader();
+      return thunkAPI.rejectWithValue("Request failed");
+    }
+  },
+);

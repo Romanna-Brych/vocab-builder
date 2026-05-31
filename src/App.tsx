@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
@@ -7,8 +8,37 @@ import RecommendPage from "./pages/RecommendPage/RecommendPage";
 import TrainingPage from "./pages/TrainingPage/TrainingPage";
 import { PrivateRoute } from "./routes/PrivateRoute";
 import { RestrictedRoute } from "./routes/RestrictedRoute";
+import { refreshUser } from "./redux/auth/operations";
+import {
+  selectIsRefreshing,
+  selectToken,
+  selectIsInitialized,
+} from "./redux/auth/selectors";
+import { useAppDispatch, useAppSelector } from "./redux/hooks";
+import { authInitialized } from "./redux/auth/authSlice";
 
 function App() {
+  const dispatch = useAppDispatch();
+  const token = useAppSelector(selectToken);
+  const isInitialized = useAppSelector(selectIsInitialized);
+  const isRefreshing = useAppSelector(selectIsRefreshing);
+
+  useEffect(() => {
+    if (token) {
+      dispatch(refreshUser());
+    } else {
+      dispatch(authInitialized());
+    }
+  }, [dispatch, token]);
+
+  if (!isInitialized || isRefreshing) {
+    return <p>Loading...</p>;
+  }
+
+  if (isRefreshing) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/dictionary" />} />
