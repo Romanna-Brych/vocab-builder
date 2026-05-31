@@ -1,14 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { login, logout, register } from "./operations";
 
-type User = {
-  name: string | null;
-  email: string | null;
-};
+import { login, logout, register } from "./operations";
+import type { User } from "@/types/auth";
+
 
 type AuthState = {
-  user: User;
+  user: User | null;
   token: string | null;
   isLoggedIn: boolean;
   isRefreshing: boolean;
@@ -16,10 +14,7 @@ type AuthState = {
 };
 
 const initialState: AuthState = {
-  user: {
-    name: null,
-    email: null,
-  },
+  user: null,
   token: null,
   isLoggedIn: false,
   isRefreshing: false,
@@ -37,7 +32,11 @@ const authSlice = createSlice({
       })
       .addCase(register.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload.user;
+        state.user = {
+          name: action.payload.name,
+          email: action.payload.email,
+        };
+
         state.token = action.payload.token;
         state.isLoggedIn = true;
       })
@@ -50,7 +49,10 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload.user;
+        state.user = {
+          name: action.payload.name,
+          email: action.payload.email,
+        };
         state.token = action.payload.token;
         state.isLoggedIn = true;
       })
@@ -59,10 +61,7 @@ const authSlice = createSlice({
       })
 
       .addCase(logout.fulfilled, (state) => {
-        state.user = {
-          name: null,
-          email: null,
-        };
+        state.user = null;
         state.token = null;
         state.isLoggedIn = false;
       });
