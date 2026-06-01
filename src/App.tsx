@@ -13,15 +13,18 @@ import {
   selectIsRefreshing,
   selectToken,
   selectIsInitialized,
+  selectIsLoggedIn,
 } from "./redux/auth/selectors";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { authInitialized } from "./redux/auth/authSlice";
+import Header from "./components/Header/Header";
 
 function App() {
   const dispatch = useAppDispatch();
   const token = useAppSelector(selectToken);
   const isInitialized = useAppSelector(selectIsInitialized);
   const isRefreshing = useAppSelector(selectIsRefreshing);
+  const isLoggedIn = useAppSelector(selectIsLoggedIn);
 
   useEffect(() => {
     if (token) {
@@ -40,54 +43,57 @@ function App() {
   }
 
   return (
-    <Routes>
-      <Route path="/" element={<Navigate to="/dictionary" />} />
+    <>
+      {isLoggedIn && <Header />}
+      <Routes>
+        <Route path="/" element={<Navigate to="/dictionary" />} />
 
-      <Route
-        path="/register"
-        element={
-          <RestrictedRoute>
-            <RegisterPage />
-          </RestrictedRoute>
-        }
-      />
+        <Route
+          path="/register"
+          element={
+            <RestrictedRoute>
+              <RegisterPage />
+            </RestrictedRoute>
+          }
+        />
 
-      <Route
-        path="/login"
-        element={
-          <RestrictedRoute>
-            <LoginPage />
-          </RestrictedRoute>
-        }
-      />
+        <Route
+          path="/login"
+          element={
+            <RestrictedRoute>
+              <LoginPage />
+            </RestrictedRoute>
+          }
+        />
 
-      <Route
-        path="/dictionary"
-        element={
-          <PrivateRoute>
-            <DictionaryPage />
-          </PrivateRoute>
-        }
-      />
+        <Route
+          path="/dictionary"
+          element={
+            <PrivateRoute>
+              <DictionaryPage />
+            </PrivateRoute>
+          }
+        />
 
-      <Route
-        path="/recommend"
-        element={
-          <PrivateRoute>
-            <RecommendPage />
-          </PrivateRoute>
-        }
-      />
+        <Route
+          path="/recommend"
+          element={
+            <PrivateRoute>
+              <RecommendPage />
+            </PrivateRoute>
+          }
+        />
 
-      <Route
-        path="/training"
-        element={
-          <PrivateRoute>
-            <TrainingPage />
-          </PrivateRoute>
-        }
-      />
-    </Routes>
+        <Route
+          path="/training"
+          element={
+            <PrivateRoute>
+              <TrainingPage />
+            </PrivateRoute>
+          }
+        />
+      </Routes>
+    </>
   );
 }
 
