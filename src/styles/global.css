@@ -1,3 +1,7 @@
+:root {
+  --font-main: "MacPaw Fixel Display", sans-serif;
+}
+
 body {
   min-width: 320px;
   font-family: var(--font-main);

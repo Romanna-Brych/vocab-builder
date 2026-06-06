@@ -1,12 +1,16 @@
+import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
+import sprite from "@/assets/icons/sprite.svg";
 import { register as registerUser } from "@/redux/auth/operations";
 import { useAppDispatch } from "@/redux/hooks";
 import type { RegisterCredentials } from "@/types/auth";
+
+import css from "./RegisterForm.module.css";
 
 const schema: yup.ObjectSchema<RegisterCredentials> = yup.object({
   name: yup.string().required("Name is required"),
@@ -24,6 +28,8 @@ const schema: yup.ObjectSchema<RegisterCredentials> = yup.object({
 });
 
 export default function RegisterForm() {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -45,17 +51,56 @@ export default function RegisterForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input type="text" placeholder="Name" {...register("name")} />
-      {errors.name && <p>{errors.name.message}</p>}
+    <form className={css.form} onSubmit={handleSubmit(onSubmit)}>
+      <div className={css.field}>
+        <input
+          className={css.input}
+          type="text"
+          placeholder="Name"
+          {...register("name")}
+        />
+        {errors.name && <p className={css.error}>{errors.name.message}</p>}
+      </div>
 
-      <input type="email" placeholder="Email" {...register("email")} />
-      {errors.email && <p>{errors.email.message}</p>}
+      <div className={css.field}>
+        <input
+          className={css.input}
+          type="email"
+          placeholder="Email"
+          {...register("email")}
+        />
+        {errors.email && <p className={css.error}>{errors.email.message}</p>}
+      </div>
 
-      <input type="password" placeholder="Password" {...register("password")} />
-      {errors.password && <p>{errors.password.message}</p>}
+      <div className={css.field}>
+        <input
+          className={`${css.input} ${css.passwordInput}`}
+          type={isPasswordVisible ? "text" : "password"}
+          placeholder="Password"
+          {...register("password")}
+        />
 
-      <button type="submit" disabled={isSubmitting}>
+        <button
+          type="button"
+          className={css.eyeBtn}
+          onClick={() => setIsPasswordVisible((prev) => !prev)}
+          aria-label={isPasswordVisible ? "Hide password" : "Show password"}
+        >
+          <svg className={css.eyeIcon}>
+            <use
+              href={`${sprite}#${
+                isPasswordVisible ? "icon-eye-off" : "icon-eye"
+              }`}
+            />
+          </svg>
+        </button>
+
+        {errors.password && (
+          <p className={css.error}>{errors.password.message}</p>
+        )}
+      </div>
+
+      <button className={css.button} type="submit" disabled={isSubmitting}>
         Register
       </button>
     </form>
