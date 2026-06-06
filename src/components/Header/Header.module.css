@@ -4,6 +4,7 @@
 
 .headerContainer {
   height: 80px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -106,6 +107,9 @@
 }
 
 .menuTop {
+  position: relative;
+  z-index: 2;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -124,6 +128,9 @@
 }
 
 .menuContent {
+  position: relative;
+  z-index: 2;
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -159,9 +166,13 @@
   bottom: 0;
 
   width: 350px;
-  max-width: none !important;
+  max-width: none;
   height: auto;
+
   display: block;
+
+  z-index: 1;
+  pointer-events: none;
 }
 
 @media (min-width: 768px) {
@@ -201,6 +212,18 @@
   }
 
   .menuBtn {
+    display: none;
+  }
+}
+
+@media (max-height: 650px) {
+  .menuImage {
+    opacity: 0.25;
+  }
+}
+
+@media (max-height: 560px) {
+  .menuImage {
     display: none;
   }
 }

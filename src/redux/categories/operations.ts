@@ -1,14 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { api } from "@/api/api";
+import { getCategories } from "@/api/words";
 import type { Category } from "@/types/category";
 
 export const fetchCategories = createAsyncThunk<Category[]>(
   "categories/fetchCategories",
   async (_, thunkAPI) => {
     try {
-      const { data } = await api.get<Category[]>("/categories");
-      return data;
+      return await getCategories();
     } catch {
       return thunkAPI.rejectWithValue("Request failed");
     }
