@@ -1,0 +1,31 @@
+.button {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  transition: opacity 250ms ease;
+}
+
+.button:hover,
+.button:focus-visible {
+  opacity: 0.7;
+}
+
+.default {
+  color: var(--color-text-primary);
+}
+
+.light {
+  color: #ffffff;
+  padding-left: 0;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  color: currentColor;
+}

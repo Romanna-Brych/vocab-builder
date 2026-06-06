@@ -1,12 +1,25 @@
+import sprite from "@/assets/icons/sprite.svg";
 import { selectUser } from "@/redux/auth/selectors";
 import { useAppSelector } from "@/redux/hooks";
 
-export default function UserBar() {
+import css from "./UserBar.module.css";
+
+type Props = {
+  variant?: "default" | "light";
+};
+
+export default function UserBar({ variant = "default" }: Props) {
   const user = useAppSelector(selectUser);
 
   return (
-    <div>
-      <span>{user?.name}</span>
+    <div className={`${css.userBar} ${css[variant]}`}>
+      <span className={css.userName}>{user?.name}</span>
+
+      <span className={css.avatar} aria-hidden="true">
+        <svg className={css.icon}>
+          <use href={`${sprite}#icon-user`} />
+        </svg>
+      </span>
     </div>
   );
 }

@@ -16,7 +16,15 @@
             <path fill="none" stroke="#85aa9f" style="stroke: var(--color1, #85aa9f)" stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="2.4" d="M6.667 16h18.667"></path>
         </symbol>
         <symbol id="icon-switch-horizontal-01" viewBox="0 0 32 32">
-            <path fill="none" stroke="#85aa9f" style="stroke: var(--color1, #85aa9f)" stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="2.4" d="M5.333 16h21.333M21.333 21.333l5.333-5.333-5.333-5.333"></path>
+            <path
+    fill="none"
+    stroke="currentColor"
+    stroke-linejoin="round"
+    stroke-linecap="round"
+    stroke-miterlimit="4"
+    stroke-width="2.4"
+    d="M5.333 16h21.333M21.333 21.333l5.333-5.333-5.333-5.333"
+  />
         </symbol>
         <symbol id="icon-switch-horizontal-02" viewBox="0 0 32 32">
             <path fill="none" stroke="#85aa9f" style="stroke: var(--color1, #85aa9f)" stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="2" d="M26.667 22.667h-21.333M10.667 28l-5.333-5.333 5.333-5.333"></path>
@@ -45,6 +53,48 @@
             <path fill="#d80027" style="fill: var(--color6, #d80027)" d="M11.826 20.174h-0l-7.14 7.14c0.328 0.328 0.671 0.642 1.027 0.941l6.113-6.113v-1.967z"></path>
             <path fill="#d80027" style="fill: var(--color6, #d80027)" d="M11.826 11.826v-0l-7.14-7.14c-0.328 0.328-0.642 0.671-0.941 1.027l6.113 6.113h1.968z"></path>
             <path fill="#d80027" style="fill: var(--color6, #d80027)" d="M20.174 11.826l7.14-7.14c-0.328-0.328-0.671-0.642-1.027-0.94l-6.113 6.113v1.968z"></path>
+        </symbol>
+        <symbol id="icon-user" viewBox="0 0 24 24">
+            <path
+    d="M12 4C13.0609 4 14.0783 4.42143 14.8284 5.17157C15.5786 5.92172 16 6.93914 16 8C16 9.06087 15.5786 10.0783 14.8284 10.8284C14.0783 11.5786 13.0609 12 12 12C10.9391 12 9.92172 11.5786 9.17158 10.8284C8.42143 10.0783 8 9.06087 8 8C8 6.93914 8.42143 5.92172 9.17158 5.17157C9.92172 4.42143 10.9391 4 12 4ZM12 20C12 20 20 20 20 18C20 15.6 16.1 13 12 13C7.9 13 4 15.6 4 18C4 20 12 20 12 20Z"
+    fill="currentColor"
+  />
+        </symbol>
+        <symbol id="icon-close" viewBox="0 0 40 40">
+            <path
+    d="M30 10L10 30"
+    stroke="currentColor"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+            <path
+    d="M10 10L30 30"
+    stroke="currentColor"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+        </symbol>
+        <symbol id="icon-menu" viewBox="0 0 32 32">
+            <path
+    d="M4 8H28"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"
+  />
+            <path
+    d="M12 16H28"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"
+  />
+            <path
+    d="M4 24H28"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"
+  />
         </symbol>
     </defs>
 </svg>
