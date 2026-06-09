@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import sprite from "@/assets/icons/sprite.svg";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import type { Category } from "@/types/category";
 
@@ -25,7 +26,6 @@ export default function Filters({
   onIrregularChange,
 }: Props) {
   const [localKeyword, setLocalKeyword] = useState(keyword);
-
   const debouncedKeyword = useDebouncedValue(localKeyword, 300);
 
   useEffect(() => {
@@ -42,27 +42,39 @@ export default function Filters({
 
   return (
     <div className={css.filters}>
-      <input
-        className={css.searchInput}
-        type="text"
-        placeholder="Find the word"
-        value={localKeyword}
-        onChange={(event) => setLocalKeyword(event.target.value)}
-      />
+      <label className={css.searchWrapper}>
+        <input
+          className={css.input}
+          type="text"
+          placeholder="Find the word"
+          value={localKeyword}
+          onChange={(event) => setLocalKeyword(event.target.value)}
+        />
 
-      <select
-        className={css.select}
-        value={category}
-        onChange={(event) => handleCategoryChange(event.target.value)}
-      >
-        <option value="">Categories</option>
+        <svg className={css.searchIcon}>
+          <use href={`${sprite}#icon-search`} />
+        </svg>
+      </label>
 
-        {categories.map((item) => (
-          <option key={item} value={item}>
-            {item}
-          </option>
-        ))}
-      </select>
+      <div className={css.selectWrapper}>
+        <select
+          className={css.select}
+          value={category}
+          onChange={(event) => handleCategoryChange(event.target.value)}
+        >
+          <option value="">Categories</option>
+
+          {categories.map((item) => (
+            <option key={item} value={item}>
+              {item}
+            </option>
+          ))}
+        </select>
+
+        <svg className={css.chevronIcon}>
+          <use href={`${sprite}#icon-chevron-down`} />
+        </svg>
+      </div>
 
       {category === "verb" && (
         <div className={css.radioGroup}>

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 
+import sprite from "@/assets/icons/sprite.svg";
 import Filters from "@/components/Filters/Filters";
 import type { Category } from "@/types/category";
 
@@ -42,24 +43,32 @@ export default function Dashboard({
         onIrregularChange={onIrregularChange}
       />
 
-      <div className={css.actions}>
+      <div className={css.info}>
         <p className={css.statistics}>
           To study: <span>{totalCount}</span>
         </p>
 
-        {showAddButton && (
-          <button
-            type="button"
-            className={css.actionBtn}
-            onClick={onAddWordClick}
-          >
-            Add word +
-          </button>
-        )}
+        <div className={css.actions}>
+          {showAddButton && (
+            <button
+              type="button"
+              className={css.actionBtn}
+              onClick={onAddWordClick}
+            >
+              Add word
+              <svg className={css.icon}>
+                <use href={`${sprite}#icon-plus`} />
+              </svg>
+            </button>
+          )}
 
-        <Link to="/training" className={css.actionBtn}>
-          Train oneself →
-        </Link>
+          <Link to="/training" className={css.actionBtn}>
+            Train oneself
+            <svg className={css.icon}>
+              <use href={`${sprite}#icon-switch-horizontal-01`} />
+            </svg>
+          </Link>
+        </div>
       </div>
     </section>
   );

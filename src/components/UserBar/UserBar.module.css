@@ -6,7 +6,7 @@
 
 .userName {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-text-primary);
 }
 
@@ -38,4 +38,10 @@
 
 .light .icon {
   color: var(--color-primary);
+}
+
+@media (min-width: 768px) {
+  .userName {
+    font-size: 20px;
+  }
 }
