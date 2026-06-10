@@ -13,6 +13,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 import css from "./DictionaryPage.module.css";
+import Modal from "@/components/Modal/Modal";
 
 const WORDS_LIMIT = 7;
 
@@ -26,6 +27,15 @@ export default function DictionaryPage() {
   const [category, setCategory] = useState("");
   const [isIrregular, setIsIrregular] = useState<boolean | undefined>();
   const [page, setPage] = useState(1);
+  const [isAddWordModalOpen, setIsAddWordModalOpen] = useState(false);
+
+  function onAddWordModalOpen() {
+    setIsAddWordModalOpen(true);
+  }
+
+  function onAddWordModalClose() {
+    setIsAddWordModalOpen(false);
+  }
 
   useEffect(() => {
     if (categories.length === 0) {
@@ -85,9 +95,7 @@ export default function DictionaryPage() {
           onKeywordChange={handleKeywordChange}
           onCategoryChange={handleCategoryChange}
           onIrregularChange={handleIrregularChange}
-          onAddWordClick={() => {
-            console.log("open add word modal");
-          }}
+          onAddWordClick={onAddWordModalOpen}
         />
 
         {isCategoriesLoading && <p>Loading categories...</p>}
@@ -97,6 +105,8 @@ export default function DictionaryPage() {
         {isWordsError && <p>Failed to load words</p>}
 
         {wordsData && <WordsTable words={wordsData.results} />}
+
+        {isAddWordModalOpen && <Modal onClose={onAddWordModalClose}>Bla</Modal>}
       </div>
     </main>
   );
