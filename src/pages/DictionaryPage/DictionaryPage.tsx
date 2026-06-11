@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 import css from "./DictionaryPage.module.css";
 import Modal from "@/components/Modal/Modal";
+import AddWordForm from "@/components/AddWordForm/AddWordForm";
 
 const WORDS_LIMIT = 7;
 
@@ -106,7 +107,11 @@ export default function DictionaryPage() {
 
         {wordsData && <WordsTable words={wordsData.results} />}
 
-        {isAddWordModalOpen && <Modal onClose={onAddWordModalClose}>Bla</Modal>}
+        {isAddWordModalOpen && (
+          <Modal onClose={onAddWordModalClose}>
+            <AddWordForm onClose={onAddWordModalClose} />
+          </Modal>
+        )}
       </div>
     </main>
   );
