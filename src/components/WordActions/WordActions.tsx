@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import sprite from "@/assets/icons/sprite.svg";
 
@@ -11,6 +11,24 @@ type Props = {
 
 export default function WordActions({ onEdit, onDelete }: Props) {
   const [isOpen, setIsOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleEdit = () => {
     onEdit();
@@ -23,7 +41,7 @@ export default function WordActions({ onEdit, onDelete }: Props) {
   };
 
   return (
-    <div className={css.wrapper}>
+    <div className={css.wrapper} ref={wrapperRef}>
       <button
         type="button"
         className={css.menuBtn}
