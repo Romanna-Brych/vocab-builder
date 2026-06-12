@@ -10,12 +10,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
 
-type EditWordForm = {
+import css from "./EditWordForm.module.css";
+
+type EditWordFormValues = {
   en: string;
   ua: string;
 };
 
-const schema: Yup.ObjectSchema<EditWordForm> = Yup.object({
+const schema: Yup.ObjectSchema<EditWordFormValues> = Yup.object({
   en: Yup.string()
     .trim()
     .required("English word is required")
@@ -30,18 +32,20 @@ const schema: Yup.ObjectSchema<EditWordForm> = Yup.object({
     ),
 });
 
-interface Props {
+type Props = {
   onClose: () => void;
   word: Word;
-}
+};
 
-function EditWordForm({ onClose, word }: Props) {
+export default function EditWordForm({ onClose, word }: Props) {
+  const queryClient = useQueryClient();
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<EditWordForm>({
+  } = useForm<EditWordFormValues>({
     resolver: yupResolver(schema),
   });
 
@@ -52,69 +56,82 @@ function EditWordForm({ onClose, word }: Props) {
     });
   }, [word, reset]);
 
-  const queryClient = useQueryClient();
-
   const { mutate, isPending } = useMutation({
     mutationFn: (payload: EditWordPayload) => editWord(word._id, payload),
+
     onError: () => {
       toast.error("Failed to edit word");
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["ownWords"],
-      });
 
-      queryClient.invalidateQueries({
-        queryKey: ["statistics"],
-      });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ownWords"] });
+      queryClient.invalidateQueries({ queryKey: ["statistics"] });
 
       toast.success("Word edited");
       onClose();
     },
   });
 
-  function onSubmit(data: EditWordForm) {
+  function onSubmit(data: EditWordFormValues) {
     const payload: EditWordPayload = {
       en: data.en,
       ua: data.ua,
       category: word.category,
       isIrregular: word.isIrregular,
     };
+
     mutate(payload);
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <input {...register("ua")} id="ukrainian" type="text" />
-        <label htmlFor="ukrainian">
-          <svg>
-            <use href={`${sprite}#icon-ukraine`}></use>
-          </svg>{" "}
-          Ukrainian
-        </label>
+    <form className={css.form} onSubmit={handleSubmit(onSubmit)}>
+      <div className={css.fields}>
+        <div className={css.fieldRow}>
+          <input
+            className={css.input}
+            {...register("ua")}
+            id="ukrainian"
+            type="text"
+          />
+
+          <label className={css.languageLabel} htmlFor="ukrainian">
+            <svg className={css.flagIcon}>
+              <use href={`${sprite}#icon-ukraine`} />
+            </svg>
+            Ukrainian
+          </label>
+        </div>
+
+        {errors.ua && <p className={css.error}>{errors.ua.message}</p>}
+
+        <div className={css.fieldRow}>
+          <input
+            className={css.input}
+            {...register("en")}
+            id="english"
+            type="text"
+          />
+
+          <label className={css.languageLabel} htmlFor="english">
+            <svg className={css.flagIcon}>
+              <use href={`${sprite}#icon-united-kingdom`} />
+            </svg>
+            English
+          </label>
+        </div>
+
+        {errors.en && <p className={css.error}>{errors.en.message}</p>}
       </div>
-      {errors.ua && <p>{errors.ua.message}</p>}
-      <div>
-        <input {...register("en")} id="english" type="text" />
-        <label htmlFor="english">
-          <svg>
-            <use href={`${sprite}#icon-united-kingdom`}></use>
-          </svg>{" "}
-          English
-        </label>
-      </div>
-      {errors.en && <p>{errors.en.message}</p>}
-      <div>
-        <button type="submit" disabled={isPending}>
+
+      <div className={css.actions}>
+        <button className={css.submitBtn} type="submit" disabled={isPending}>
           {isPending ? "Saving..." : "Save"}
         </button>
-        <button onClick={onClose} type="button">
+
+        <button className={css.cancelBtn} onClick={onClose} type="button">
           Cancel
         </button>
       </div>
     </form>
   );
 }
-
-export default EditWordForm;
