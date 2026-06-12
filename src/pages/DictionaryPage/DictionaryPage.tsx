@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import Dashboard from "@/components/Dashboard/Dashboard";
 import WordsTable from "@/components/WordsTable/WordsTable";
 
-import { getOwnWords, getStatistics } from "@/api/words";
+import { deleteWord, getOwnWords, getStatistics } from "@/api/words";
 import { fetchCategories } from "@/redux/categories/operations";
 import {
   selectCategories,
@@ -15,6 +15,8 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import css from "./DictionaryPage.module.css";
 import Modal from "@/components/Modal/Modal";
 import AddWordForm from "@/components/AddWordForm/AddWordForm";
+import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 const WORDS_LIMIT = 7;
 
@@ -29,6 +31,7 @@ export default function DictionaryPage() {
   const [isIrregular, setIsIrregular] = useState<boolean | undefined>();
   const [page, setPage] = useState(1);
   const [isAddWordModalOpen, setIsAddWordModalOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   function onAddWordModalOpen() {
     setIsAddWordModalOpen(true);
@@ -84,6 +87,32 @@ export default function DictionaryPage() {
     setPage(1);
   };
 
+  const { mutate } = useMutation({
+    mutationFn: (word: string) => deleteWord(word),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["ownWords"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["statistics"],
+      });
+      toast.success("Word deleted");
+    },
+    onError: () => {
+      toast.error("Failed to delete word");
+    },
+  });
+
+  function handleWordDelete(wordId: string) {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this word?",
+    );
+
+    if (!confirmed) return;
+
+    mutate(wordId);
+  }
+
   return (
     <main className={css.page}>
       <div className="container">
@@ -105,7 +134,9 @@ export default function DictionaryPage() {
 
         {isWordsError && <p>Failed to load words</p>}
 
-        {wordsData && <WordsTable words={wordsData.results} />}
+        {wordsData && (
+          <WordsTable words={wordsData.results} onDelete={handleWordDelete} />
+        )}
 
         {isAddWordModalOpen && (
           <Modal onClose={onAddWordModalClose}>
