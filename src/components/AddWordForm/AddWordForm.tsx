@@ -11,6 +11,8 @@ import { type CreateWordPayload } from "@/types/word";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
+import css from "./AddWordForm.module.css";
+
 type AddWordFormValues = {
   category: string;
   isIrregular?: "regular" | "irregular";
@@ -43,36 +45,35 @@ const schema: Yup.ObjectSchema<AddWordFormValues> = Yup.object({
     ),
 });
 
-interface Props {
+type Props = {
   onClose: () => void;
-}
+};
 
-function AddWordForm({ onClose }: Props) {
+export default function AddWordForm({ onClose }: Props) {
+  const categories = useAppSelector(selectCategories);
+  const queryClient = useQueryClient();
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<AddWordFormValues>({ resolver: yupResolver(schema) });
-
-  const categories = useAppSelector(selectCategories);
-  const queryClient = useQueryClient();
+  } = useForm<AddWordFormValues>({
+    resolver: yupResolver(schema),
+  });
 
   const selectedCategory = watch("category");
 
   const { mutate, isPending } = useMutation({
     mutationFn: (payload: CreateWordPayload) => createWord(payload),
+
     onError: () => {
       toast.error("Failed to create word");
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["ownWords"],
-      });
 
-      queryClient.invalidateQueries({
-        queryKey: ["statistics"],
-      });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ownWords"] });
+      queryClient.invalidateQueries({ queryKey: ["statistics"] });
 
       toast.success("Word added");
       onClose();
@@ -92,80 +93,114 @@ function AddWordForm({ onClose }: Props) {
   }
 
   return (
-    <div>
-      <h2>Add word</h2>
-      <p>
+    <div className={css.wrapper}>
+      <h2 className={css.title}>Add word</h2>
+
+      <p className={css.description}>
         Adding a new word to the dictionary is an important step in enriching
         the language base and expanding the vocabulary.
       </p>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <select {...register("category")} id="category">
-          <option value="">Category</option>
-          {categories.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          ))}
-        </select>
-        {errors.category && <p>{errors.category.message}</p>}
+
+      <form className={css.form} onSubmit={handleSubmit(onSubmit)}>
+        <div className={css.selectWrapper}>
+          <select className={css.select} {...register("category")}>
+            <option value="">Category</option>
+
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+
+          <svg className={css.chevronIcon}>
+            <use href={`${sprite}#icon-chevron-down`} />
+          </svg>
+        </div>
+
+        {errors.category && (
+          <p className={css.error}>{errors.category.message}</p>
+        )}
+
         {selectedCategory === "verb" && (
-          <div>
-            <div>
-              <input
-                {...register("isIrregular")}
-                type="radio"
-                id="regular"
-                value="regular"
-              />
-              <label htmlFor="regular">Regular</label>
+          <div className={css.verbBlock}>
+            <div className={css.radioGroup}>
+              <label className={css.radioLabel}>
+                <input
+                  className={css.radioInput}
+                  {...register("isIrregular")}
+                  type="radio"
+                  value="regular"
+                  defaultChecked
+                />
+                <span className={css.customRadio} />
+                Regular
+              </label>
+
+              <label className={css.radioLabel}>
+                <input
+                  className={css.radioInput}
+                  {...register("isIrregular")}
+                  type="radio"
+                  value="irregular"
+                />
+                <span className={css.customRadio} />
+                Irregular
+              </label>
             </div>
-            <div>
-              <input
-                {...register("isIrregular")}
-                type="radio"
-                id="irregular"
-                value="irregular"
-              />
-              <label htmlFor="irregular">Irregular</label>
-            </div>
-            {errors.isIrregular && <p>{errors.isIrregular.message}</p>}
+
+            {errors.isIrregular && (
+              <p className={css.error}>{errors.isIrregular.message}</p>
+            )}
           </div>
         )}
-        <div>
-          <input
-            {...register("ua")}
-            placeholder="Працювати"
-            id="ukrainian"
-            type="text"
-          />
-          <label htmlFor="ukrainian">
-            <svg>
-              <use href={`${sprite}#icon-ukraine`}></use>
-            </svg>{" "}
-            Ukrainian
-          </label>
+
+        <div className={css.fields}>
+          <div className={css.fieldRow}>
+            <input
+              className={css.input}
+              {...register("ua")}
+              placeholder="Працювати"
+              id="ukrainian"
+              type="text"
+            />
+
+            <label className={css.languageLabel} htmlFor="ukrainian">
+              <svg className={css.flagIcon}>
+                <use href={`${sprite}#icon-ukraine`} />
+              </svg>
+              Ukrainian
+            </label>
+          </div>
+
+          {errors.ua && <p className={css.error}>{errors.ua.message}</p>}
+
+          <div className={css.fieldRow}>
+            <input
+              className={css.input}
+              {...register("en")}
+              placeholder="Work"
+              id="english"
+              type="text"
+            />
+
+            <label className={css.languageLabel} htmlFor="english">
+              <svg className={css.flagIcon}>
+                <use href={`${sprite}#icon-united-kingdom`} />
+              </svg>
+              English
+            </label>
+          </div>
+
+          {errors.en && <p className={css.error}>{errors.en.message}</p>}
         </div>
-        {errors.ua && <p>{errors.ua.message}</p>}
-        <div>
-          <input
-            {...register("en")}
-            placeholder="Work"
-            id="english"
-            type="text"
-          />
-          <label htmlFor="english">
-            <svg>
-              <use href={`${sprite}#icon-united-kingdom`}></use>
-            </svg>{" "}
-            English
-          </label>
-        </div>
-        {errors.en && <p>{errors.en.message}</p>}
-        <div>
-          <button type="submit" disabled={isPending}>
+
+        <div className={css.actions}>
+          <button className={css.submitBtn} type="submit" disabled={isPending}>
             {isPending ? "Adding..." : "Add"}
           </button>
-          <button onClick={onClose} type="button">
+
+          <button className={css.cancelBtn} onClick={onClose} type="button">
             Cancel
           </button>
         </div>
@@ -173,5 +208,3 @@ function AddWordForm({ onClose }: Props) {
     </div>
   );
 }
-
-export default AddWordForm;
