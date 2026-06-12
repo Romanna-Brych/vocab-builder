@@ -17,6 +17,8 @@ import Modal from "@/components/Modal/Modal";
 import AddWordForm from "@/components/AddWordForm/AddWordForm";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import EditWordForm from "@/components/EditWordForm/EditWordForm";
+import type { Word } from "@/types/word";
 
 const WORDS_LIMIT = 7;
 
@@ -31,6 +33,8 @@ export default function DictionaryPage() {
   const [isIrregular, setIsIrregular] = useState<boolean | undefined>();
   const [page, setPage] = useState(1);
   const [isAddWordModalOpen, setIsAddWordModalOpen] = useState(false);
+  const [isEditWordModalOpen, setIsEditWordModalOpen] = useState(false);
+  const [selectedWord, setSelectedWord] = useState<Word | null>(null);
   const queryClient = useQueryClient();
 
   function onAddWordModalOpen() {
@@ -39,6 +43,14 @@ export default function DictionaryPage() {
 
   function onAddWordModalClose() {
     setIsAddWordModalOpen(false);
+  }
+
+  function onEditWordModalOpen() {
+    setIsEditWordModalOpen(true);
+  }
+
+  function onEditWordModalClose() {
+    setIsEditWordModalOpen(false);
   }
 
   useEffect(() => {
@@ -135,12 +147,25 @@ export default function DictionaryPage() {
         {isWordsError && <p>Failed to load words</p>}
 
         {wordsData && (
-          <WordsTable words={wordsData.results} onDelete={handleWordDelete} />
+          <WordsTable
+            words={wordsData.results}
+            onDelete={handleWordDelete}
+            onEdit={(word) => {
+              setSelectedWord(word);
+              onEditWordModalOpen();
+            }}
+          />
         )}
 
         {isAddWordModalOpen && (
           <Modal onClose={onAddWordModalClose}>
             <AddWordForm onClose={onAddWordModalClose} />
+          </Modal>
+        )}
+
+        {isEditWordModalOpen && selectedWord && (
+          <Modal onClose={onEditWordModalClose}>
+            <EditWordForm word={selectedWord} onClose={onEditWordModalClose} />
           </Modal>
         )}
       </div>
