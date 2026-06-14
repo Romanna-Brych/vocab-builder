@@ -19,6 +19,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import EditWordForm from "@/components/EditWordForm/EditWordForm";
 import type { Word } from "@/types/word";
+import WordsPagination from "@/components/WordsPagination/WordsPagination";
 
 const WORDS_LIMIT = 7;
 
@@ -75,7 +76,7 @@ export default function DictionaryPage() {
     isLoading: isWordsLoading,
     isError: isWordsError,
   } = useQuery({
-    queryKey: ["ownWords", wordsParams],
+    queryKey: ["ownWords", keyword, category, isIrregular, page, WORDS_LIMIT],
     queryFn: () => getOwnWords(wordsParams),
   });
 
@@ -83,7 +84,6 @@ export default function DictionaryPage() {
     queryKey: ["statistics"],
     queryFn: getStatistics,
   });
-
   const handleKeywordChange = (value: string) => {
     setKeyword(value);
     setPage(1);
@@ -167,6 +167,14 @@ export default function DictionaryPage() {
           <Modal onClose={onEditWordModalClose}>
             <EditWordForm word={selectedWord} onClose={onEditWordModalClose} />
           </Modal>
+        )}
+
+        {wordsData && wordsData.totalPages > 1 && (
+          <WordsPagination
+            currentPage={wordsData.page}
+            totalPages={wordsData.totalPages}
+            onPageChange={setPage}
+          />
         )}
       </div>
     </main>

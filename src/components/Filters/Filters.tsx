@@ -29,8 +29,12 @@ export default function Filters({
   const debouncedKeyword = useDebouncedValue(localKeyword, 300);
 
   useEffect(() => {
-    onKeywordChange(debouncedKeyword.trim());
-  }, [debouncedKeyword, onKeywordChange]);
+    const trimmedKeyword = debouncedKeyword.trim();
+
+    if (trimmedKeyword !== keyword) {
+      onKeywordChange(trimmedKeyword);
+    }
+  }, [debouncedKeyword, keyword, onKeywordChange]);
 
   const handleCategoryChange = (value: string) => {
     onCategoryChange(value);

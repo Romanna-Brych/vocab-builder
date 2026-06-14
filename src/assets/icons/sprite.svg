@@ -118,5 +118,22 @@
     fill="currentColor"
   />
         </symbol>
+        <symbol id="icon-chevrons-left" viewBox="0 0 16 16">
+  <path
+    d="M11.7267 12L12.6667 11.06L9.61335 8L12.6667 4.94L11.7267 4L7.72669 8L11.7267 12Z"
+    fill="currentColor"
+  />
+  <path
+    d="M7.33332 12L8.27332 11.06L5.21998 8L8.27331 4.94L7.33331 4L3.33332 8L7.33332 12Z"
+    fill="currentColor"
+  />
+</symbol>
+
+<symbol id="icon-chevron-left" viewBox="0 0 16 16">
+  <path
+    d="M10.06 12L11 11.06L7.94667 8L11 4.94L10.06 4L6.06 8L10.06 12Z"
+    fill="currentColor"
+  />
+</symbol>
     </defs>
 </svg>
