@@ -49,7 +49,7 @@ export type TrainingTask = {
 };
 
 export type TasksResponse = {
-  words: TrainingTask[];
+  tasks: TrainingTask[];
 };
 
 export type AnswerPayload = {
