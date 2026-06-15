@@ -9,6 +9,8 @@ import TrainingRoom from "@/components/TrainingRoom/TrainingRoom";
 import ProgressBar from "@/components/ProgressBar/ProgressBar";
 
 import css from "./TrainingPage.module.css";
+import Modal from "@/components/Modal/Modal";
+import WellDoneModal from "@/components/WellDoneModal/WellDoneModal";
 
 function TrainingPage() {
   const navigate = useNavigate();
@@ -34,7 +36,6 @@ function TrainingPage() {
     onError: (error: unknown) => {
       toast.error("Training progress was not saved");
       console.error(error);
-      navigate("/dictionary");
     },
   });
 
@@ -83,6 +84,11 @@ function TrainingPage() {
     mutate(finalAnswers);
   }
 
+  function handleModalClose() {
+    setIsResultModalOpen(false);
+    navigate("/dictionary");
+  }
+
   return (
     <main className={css.page}>
       <div className="container">
@@ -107,6 +113,11 @@ function TrainingPage() {
           />
         </div>
       </div>
+      {isResultModalOpen && (
+        <Modal onClose={handleModalClose} maxWidth="518px">
+          <WellDoneModal results={results} />
+        </Modal>
+      )}
     </main>
   );
 }

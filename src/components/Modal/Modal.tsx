@@ -8,9 +8,10 @@ import { useEffect, type MouseEvent, type ReactNode } from "react";
 interface Props {
   onClose: () => void;
   children: ReactNode;
+  maxWidth?: string;
 }
 
-export function Modal({ onClose, children }: Props) {
+export function Modal({ onClose, children, maxWidth }: Props) {
   function handleBackdropClick(event: MouseEvent<HTMLDivElement>) {
     if (event.target === event.currentTarget) {
       onClose();
@@ -35,7 +36,7 @@ export function Modal({ onClose, children }: Props) {
 
   return createPortal(
     <div onClick={handleBackdropClick} className={css.overlay}>
-      <div className={css.modal}>
+      <div className={css.modal} style={maxWidth ? { maxWidth } : undefined}>
         <button
           className={css.closeBtn}
           onClick={onClose}
