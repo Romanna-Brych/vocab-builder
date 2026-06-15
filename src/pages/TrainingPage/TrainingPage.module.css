@@ -1,0 +1,38 @@
+.page {
+  padding-top: 24px;
+  padding-bottom: 48px;
+}
+
+.trainingWrapper {
+  position: relative;
+  padding-top: 68px;
+}
+
+.progress {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+@media (min-width: 768px) {
+  .page {
+    padding-top: 62px;
+    padding-bottom: 80px;
+  }
+
+  .trainingWrapper {
+    padding-top: 84px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .page {
+    padding-top: 62px;
+    padding-bottom: 100px;
+  }
+
+  .trainingWrapper {
+    margin: 0 auto;
+    padding-top: 92px;
+  }
+}

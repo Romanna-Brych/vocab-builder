@@ -5,6 +5,10 @@ import { useNavigate } from "react-router-dom";
 
 import { getTasks, postAnswers } from "@/api/words";
 import type { AnswerPayload, AnswerResult, TasksResponse } from "@/types/word";
+import TrainingRoom from "@/components/TrainingRoom/TrainingRoom";
+import ProgressBar from "@/components/ProgressBar/ProgressBar";
+
+import css from "./TrainingPage.module.css";
 
 function TrainingPage() {
   const navigate = useNavigate();
@@ -22,54 +26,44 @@ function TrainingPage() {
 
   const { mutate, isPending } = useMutation({
     mutationFn: postAnswers,
-
     onSuccess: (data: AnswerResult[]) => {
+      console.log("Бекенд відповідь:", data);
       setResults(data);
       setIsResultModalOpen(true);
     },
-
-    onError: () => {
+    onError: (error: unknown) => {
       toast.error("Training progress was not saved");
+      console.error(error);
       navigate("/dictionary");
     },
   });
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
-  if (isError) {
-    return <p>Failed to load training tasks</p>;
-  }
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Failed to load training tasks</p>;
 
   const tasks = data?.tasks ?? [];
 
-  if (tasks.length === 0) {
-    return <p>No tasks</p>;
-  }
+  if (tasks.length === 0) return <p>No tasks</p>;
 
   const currentTask = tasks[currentIndex];
 
   const question = currentTask.task === "ua" ? currentTask.en : currentTask.ua;
-
   const answerLanguage = currentTask.task === "ua" ? "Ukrainian" : "English";
-
   const questionLanguage = currentTask.task === "ua" ? "English" : "Ukrainian";
 
   const isLastTask = currentIndex === tasks.length - 1;
-
   const progress = Math.round(((currentIndex + 1) / tasks.length) * 100);
 
-  function createCurrentAnswer(): AnswerPayload | null {
-    const trimmedAnswer = answer.trim();
+  const isAnswerEmpty = !answer.trim();
 
-    if (!trimmedAnswer) {
-      return null;
-    }
+  function createCurrentAnswer(): AnswerPayload {
+    const trimmedAnswer = answer.trim();
 
     return {
       _id: currentTask._id,
       task: currentTask.task,
+      en: currentTask.en || "",
+      ua: currentTask.ua || "",
       [currentTask.task]: trimmedAnswer,
     };
   }
@@ -77,96 +71,42 @@ function TrainingPage() {
   function handleNext() {
     const currentAnswer = createCurrentAnswer();
 
-    if (currentAnswer) {
-      setAnswers((prev) => [...prev, currentAnswer]);
-    }
-
+    setAnswers((prev) => [...prev, currentAnswer]);
     setAnswer("");
-
-    if (!isLastTask) {
-      setCurrentIndex((prev) => prev + 1);
-    }
+    setCurrentIndex((prev) => prev + 1);
   }
 
   function handleSave() {
     const currentAnswer = createCurrentAnswer();
-
-    const finalAnswers = currentAnswer
-      ? [...answers, currentAnswer]
-      : [...answers];
-
+    const finalAnswers = [...answers, currentAnswer];
+    console.log("Дані, які ми відправляємо на бекенд:", finalAnswers);
     mutate(finalAnswers);
   }
 
-  function handleCloseResultModal() {
-    setIsResultModalOpen(false);
-    navigate("/dictionary");
-  }
-
-  const correctAnswers = results.filter((item) => item.isDone);
-  const mistakes = results.filter((item) => !item.isDone);
-
   return (
-    <main>
-      <h1>TrainingPage</h1>
+    <main className={css.page}>
+      <div className="container">
+        <div className={css.trainingWrapper}>
+          <div className={css.progress}>
+            <ProgressBar value={progress} />
+          </div>
 
-      <p>{progress}%</p>
-
-      <div>
-        <div>
-          <input
-            type="text"
-            value={answer}
-            onChange={(event) => setAnswer(event.target.value)}
-            placeholder="Enter translation"
+          <TrainingRoom
+            answer={answer}
+            question={question ?? ""}
+            answerLanguage={answerLanguage}
+            questionLanguage={questionLanguage}
+            isLastTask={isLastTask}
+            isPending={isPending}
+            isNextDisabled={isAnswerEmpty}
+            isSaveDisabled={isAnswerEmpty || isPending}
+            onAnswerChange={setAnswer}
+            onNext={handleNext}
+            onSave={handleSave}
+            onCancel={() => navigate("/dictionary")}
           />
-
-          <p>{answerLanguage}</p>
-        </div>
-
-        <div>
-          <p>{question}</p>
-          <p>{questionLanguage}</p>
         </div>
       </div>
-
-      {!isLastTask ? (
-        <button onClick={handleNext} type="button">
-          Next
-        </button>
-      ) : (
-        <button onClick={handleSave} type="button" disabled={isPending}>
-          {isPending ? "Saving..." : "Save"}
-        </button>
-      )}
-
-      <button type="button" onClick={() => navigate("/dictionary")}>
-        Cancel
-      </button>
-
-      {isResultModalOpen && (
-        <div>
-          <h2>Well done</h2>
-
-          <h3>Correct answers</h3>
-          <ul>
-            {correctAnswers.map((item) => (
-              <li key={item._id}>{item.en || item.ua}</li>
-            ))}
-          </ul>
-
-          <h3>Mistakes</h3>
-          <ul>
-            {mistakes.map((item) => (
-              <li key={item._id}>{item.en || item.ua}</li>
-            ))}
-          </ul>
-
-          <button type="button" onClick={handleCloseResultModal}>
-            Close
-          </button>
-        </div>
-      )}
     </main>
   );
 }
