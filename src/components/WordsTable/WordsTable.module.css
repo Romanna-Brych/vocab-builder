@@ -7,26 +7,31 @@
   width: 100%;
   min-width: 0;
 
+  table-layout: fixed;
   border-collapse: separate;
   border-spacing: 0;
 }
 
 .table th {
-  padding: 16px 14px;
+  padding: 16px 10px;
 
   text-align: left;
   font-size: 16px;
   font-weight: 500;
+
   background-color: rgba(133, 170, 159, 0.1);
   border-bottom: 1px solid #dbdbdb;
 }
 
 .table td {
-  padding: 16px 14px;
+  padding: 16px 10px;
 
   font-size: 14px;
   font-weight: 500;
   vertical-align: middle;
+
+  overflow-wrap: anywhere;
+  word-break: normal;
 
   border-bottom: 1px solid #dbdbdb;
 }
@@ -48,10 +53,78 @@
   border-top-right-radius: 8px;
 }
 
+.wordCell {
+  width: 34%;
+}
+
+.translationCell {
+  width: 38%;
+}
+
+.categoryCell {
+  display: none;
+}
+
+.progressCell {
+  width: 20%;
+}
+
+.actionsCell {
+  width: 42px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Recommend mobile: Word / Translation / Category / arrow */
+.recommendTable .wordCell {
+  width: 30%;
+}
+
+.recommendTable .translationCell {
+  width: 34%;
+}
+
+.recommendTable .categoryCell {
+  display: table-cell;
+  width: 24%;
+}
+
+.recommendTable .actionsCell {
+  width: 40px;
+}
+
+/* Dictionary mobile: Word / Translation / Progress / actions */
+.dictionaryTable .wordCell {
+  width: 34%;
+}
+
+.dictionaryTable .translationCell {
+  width: 34%;
+}
+
+.dictionaryTable .progressCell {
+  width: 92px;
+}
+
+.dictionaryTable .actionsCell {
+  width: 42px;
+}
+
+.progressCell {
+  width: 20%;
+  text-align: center;
+}
+
+.progressCell > * {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .headCell {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: 6px;
 }
 
@@ -59,37 +132,37 @@
   display: none;
 }
 
-.categoryCell {
-  display: none;
-}
-
-.actionsCell {
-  width: 42px;
-  text-align: center;
-}
-
 .empty {
   height: 72px;
   text-align: center;
-  color: rgba(18, 20, 23, 0.5);
+  color: var(--color-text-muted);
 }
 
 .icon {
-  width: 20px;
-  height: 20px;
+  display: block;
+
+  width: 18px;
+  height: 18px;
 
   color: var(--color-primary);
   stroke: currentColor;
 }
 
 .addBtn {
-  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--color-text-primary);
+  width: 100%;
+  padding: 0;
+
+  color: var(--color-primary);
 
   transition: opacity 250ms ease;
+}
+
+.addText {
+  display: none;
 }
 
 .addBtn:hover,
@@ -101,7 +174,7 @@
   .tableCard {
     padding: 18px;
     border-radius: 15px;
-    background-color: #fcfcfc;
+    background-color: var(--color-white-soft);
   }
 
   .table {
@@ -114,6 +187,35 @@
     font-size: 16px;
   }
 
+  .wordCell,
+  .recommendTable .wordCell,
+  .dictionaryTable .wordCell {
+    width: 28%;
+  }
+
+  .translationCell,
+  .recommendTable .translationCell,
+  .dictionaryTable .translationCell {
+    width: 28%;
+  }
+
+  .categoryCell,
+  .recommendTable .categoryCell {
+    display: table-cell;
+    width: 24%;
+  }
+
+  .progressCell,
+  .dictionaryTable .progressCell {
+    width: 122px;
+  }
+
+  .actionsCell,
+  .recommendTable .actionsCell,
+  .dictionaryTable .actionsCell {
+    width: 66px;
+  }
+
   .flagIcon {
     display: block;
 
@@ -122,12 +224,22 @@
     flex-shrink: 0;
   }
 
-  .categoryCell {
-    display: table-cell;
+  .icon {
+    width: 20px;
+    height: 20px;
   }
 
-  .actionsCell {
-    width: 64px;
+  .addBtn {
+    gap: 6px;
+
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    flex-wrap: wrap;
+  }
+
+  .addText {
+    display: inline;
   }
 }
 
@@ -138,7 +250,11 @@
 
   .table th,
   .table td {
-    font-weight: 500;
     font-size: 20px;
+    font-weight: 500;
+  }
+
+  .addBtn {
+    font-size: 16px;
   }
 }
