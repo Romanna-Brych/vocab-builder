@@ -1,6 +1,6 @@
 import sprite from "@/assets/icons/sprite.svg";
-
 import css from "./TrainingRoom.module.css";
+import { useEffect, useRef } from "react";
 
 type Language = "Ukrainian" | "English";
 
@@ -39,11 +39,20 @@ export default function TrainingRoom({
   const questionIcon =
     questionLanguage === "Ukrainian" ? "icon-ukraine" : "icon-united-kingdom";
 
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [question]);
+
   return (
     <section className={css.room}>
       <div className={css.card}>
         <div className={css.answerSide}>
           <textarea
+            ref={textareaRef}
             className={css.textarea}
             value={answer}
             onChange={(event) => onAnswerChange(event.target.value)}

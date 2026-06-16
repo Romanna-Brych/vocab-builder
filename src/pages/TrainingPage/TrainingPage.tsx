@@ -106,7 +106,15 @@ function TrainingPage() {
             isPending={isPending}
             isNextDisabled={isAnswerEmpty}
             isSaveDisabled={isAnswerEmpty || isPending}
-            onAnswerChange={setAnswer}
+            onAnswerChange={(value) => {
+              if (answerLanguage === "English") {
+                const filtered = value.replace(/[^a-zA-Z\s\-']/g, "");
+                setAnswer(filtered);
+              } else {
+                const filtered = value.replace(/[^а-яА-ЯіІїЇєЄґҐ\s\-’']/g, "");
+                setAnswer(filtered);
+              }
+            }}
             onNext={handleNext}
             onSave={handleSave}
             onCancel={() => navigate("/dictionary")}

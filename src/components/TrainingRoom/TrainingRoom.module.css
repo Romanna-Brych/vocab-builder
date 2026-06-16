@@ -165,6 +165,11 @@
     margin-top: 40px;
   }
 
+  .nextBtn {
+    font-weight: 500;
+    font-size: 16px;
+  }
+
   .saveBtn,
   .cancelBtn {
     width: 204px;
