@@ -1,5 +1,4 @@
 import sprite from "@/assets/icons/sprite.svg";
-
 import css from "./WordsPagination.module.css";
 
 type Props = {
@@ -13,9 +12,41 @@ export default function WordsPagination({
   totalPages,
   onPageChange,
 }: Props) {
-  const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
-
   if (totalPages <= 1) return null;
+
+  const getPaginationPages = () => {
+    const pages: (number | string)[] = [];
+
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+      return pages;
+    }
+
+    pages.push(1);
+
+    if (currentPage > 3) {
+      pages.push("...left");
+    }
+
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
+
+    for (let i = start; i <= end; i++) {
+      if (i !== 1 && i !== totalPages) {
+        pages.push(i);
+      }
+    }
+
+    if (currentPage < totalPages - 2) {
+      pages.push("...right");
+    }
+
+    pages.push(totalPages);
+
+    return pages;
+  };
+
+  const visiblePages = getPaginationPages();
 
   return (
     <div className={css.pagination}>
@@ -41,16 +72,26 @@ export default function WordsPagination({
         </svg>
       </button>
 
-      {pages.map((page) => (
-        <button
-          key={page}
-          type="button"
-          className={`${css.pageBtn} ${currentPage === page ? css.active : ""}`}
-          onClick={() => onPageChange(page)}
-        >
-          {page}
-        </button>
-      ))}
+      {visiblePages.map((page) => {
+        if (typeof page === "string") {
+          return (
+            <span key={page} className={css.ellipsis}>
+              ...
+            </span>
+          );
+        }
+
+        return (
+          <button
+            key={page}
+            type="button"
+            className={`${css.pageBtn} ${currentPage === page ? css.active : ""}`}
+            onClick={() => onPageChange(page)}
+          >
+            {page}
+          </button>
+        );
+      })}
 
       <button
         type="button"

@@ -43,6 +43,18 @@
   color: var(--color-white-soft);
 }
 
+.ellipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  color: var(--color-text-primary);
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
 .icon {
   width: 16px;
   height: 16px;
