@@ -81,7 +81,7 @@
 
 .menuIcon {
   width: 32px;
-  height: 32px;
+  height: 22px;
   color: var(--color-text-primary);
 }
 
@@ -192,6 +192,15 @@
   .menuImage {
     left: -60px;
     width: 470px;
+  }
+
+  .menuIcon {
+    width: 40px;
+    height: 28px;
+  }
+
+  .actions {
+    gap: 28px;
   }
 }
 

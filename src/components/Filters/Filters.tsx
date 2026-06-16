@@ -5,6 +5,7 @@ import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import type { Category } from "@/types/category";
 
 import css from "./Filters.module.css";
+import CustomSelect from "../CustomSelect/CustomSelect";
 
 type Props = {
   categories: Category[];
@@ -44,6 +45,11 @@ export default function Filters({
     }
   };
 
+  const categoryOptions = categories.map((c) => ({
+    value: c,
+    label: c,
+  }));
+
   return (
     <div className={css.filters}>
       <label className={css.searchWrapper}>
@@ -60,24 +66,15 @@ export default function Filters({
         </svg>
       </label>
 
-      <div className={css.selectWrapper}>
-        <select
-          className={css.select}
+      <div className={`${css.selectWrapper} ${css.brandField}`}>
+        <CustomSelect
+          id="category"
           value={category}
-          onChange={(event) => handleCategoryChange(event.target.value)}
-        >
-          <option value="">Categories</option>
-
-          {categories.map((item) => (
-            <option key={item} value={item}>
-              {item}
-            </option>
-          ))}
-        </select>
-
-        <svg className={css.chevronIcon}>
-          <use href={`${sprite}#icon-chevron-down`} />
-        </svg>
+          placeholder="Categories"
+          options={categoryOptions}
+          onChange={handleCategoryChange}
+          className={css.select}
+        />
       </div>
 
       {category === "verb" && (

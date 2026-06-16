@@ -10,8 +10,7 @@
   width: 100%;
 }
 
-.input,
-.select {
+.input {
   width: 100%;
   height: 48px;
   padding: 12px 44px 12px 24px;
@@ -30,8 +29,7 @@
 }
 
 .select {
-  appearance: none;
-  cursor: pointer;
+  width: 100%;
 }
 
 .input::placeholder {
@@ -39,9 +37,7 @@
 }
 
 .input:hover,
-.input:focus,
-.select:hover,
-.select:focus {
+.input:focus {
   border-color: var(--color-primary);
 }
 
