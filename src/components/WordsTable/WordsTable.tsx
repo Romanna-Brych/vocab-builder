@@ -3,6 +3,9 @@ import ProgressBar from "@/components/ProgressBar/ProgressBar";
 import WordActions from "@/components/WordActions/WordActions";
 import type { Word } from "@/types/word";
 
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+
 import css from "./WordsTable.module.css";
 
 type Props = {
@@ -89,9 +92,29 @@ export default function WordsTable({
                   <td className={css.categoryCell}>{word.category}</td>
                 )}
 
-                {showProgress && (
+                {showProgress && word.progress !== undefined && (
                   <td className={css.progressCell}>
-                    <ProgressBar value={word.progress ?? 0} />
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "12px",
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontSize: "16px",
+                          fontWeight: 500,
+                          color: "var(--color-text-primary)",
+                          display: { xs: "none", sm: "block" },
+                          minWidth: "45px",
+                        }}
+                      >
+                        {word.progress}%
+                      </Typography>
+
+                      <ProgressBar value={word.progress} size={26} />
+                    </Box>
                   </td>
                 )}
 

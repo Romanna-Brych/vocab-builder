@@ -94,7 +94,12 @@ function TrainingPage() {
       <div className="container">
         <div className={css.trainingWrapper}>
           <div className={css.progress}>
-            <ProgressBar value={progress} />
+            <ProgressBar
+              color="var(--color-primary)"
+              value={progress}
+              size={56}
+              showTextInside={true}
+            />
           </div>
 
           <TrainingRoom
