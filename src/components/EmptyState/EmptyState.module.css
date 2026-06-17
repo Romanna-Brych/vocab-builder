@@ -1,0 +1,129 @@
+.wrapper {
+  padding: 75px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.image img {
+  width: 144px;
+  height: auto;
+}
+
+.wrapperContent {
+  display: flex;
+  flex-direction: column;
+  gap: 132px;
+}
+
+.wrapperText {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.title {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+}
+
+.text {
+  font-size: 14px;
+}
+
+.wrapperBtn {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btnAdd,
+.btnCancel {
+  border-radius: var(--radius-lg);
+
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition:
+    opacity 250ms ease,
+    background-color 250ms ease;
+}
+
+.btnAdd {
+  height: 48px;
+  color: var(--color-text-primary);
+  background-color: var(--color-primary);
+  color: #fcfcfc;
+}
+
+.btnCancel {
+  background-color: transparent;
+  color: rgba(18, 20, 23, 0.5);
+}
+
+.btnAdd:hover,
+.btnAdd:focus-visible,
+.btnCancel:hover,
+.btnCancel:focus-visible {
+  opacity: 0.8;
+}
+
+@media (min-width: 768px) {
+  .wrapper {
+    padding: 140px 62px;
+  }
+
+  .image img {
+    width: 205px;
+    height: 230px;
+  }
+
+  .wrapperContent {
+    gap: 64px;
+    max-width: 582px;
+  }
+
+  .wrapperText {
+    gap: 32px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .text {
+    font-size: 16px;
+    line-height: 150%;
+  }
+
+  .wrapperBtn {
+    max-width: 428px;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .btnAdd,
+  .btnCancel {
+    width: 215px;
+    height: 56px;
+  }
+
+  .btnCancel {
+    border: 1px solid var(--color-primary);
+    border-radius: 30px;
+    padding: 14px 71px;
+    color: var(--color-primary);
+  }
+}
+
+@media (min-width: 1440px) {
+  .wrapper {
+    padding: 210px 192px;
+    flex-direction: row-reverse;
+  }
+}

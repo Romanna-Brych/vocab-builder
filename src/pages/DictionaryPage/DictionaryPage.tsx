@@ -20,6 +20,7 @@ import toast from "react-hot-toast";
 import EditWordForm from "@/components/EditWordForm/EditWordForm";
 import type { Word } from "@/types/word";
 import WordsPagination from "@/components/WordsPagination/WordsPagination";
+import { useLocation } from "react-router-dom";
 
 const WORDS_LIMIT = 7;
 
@@ -36,6 +37,8 @@ export default function DictionaryPage() {
   const [isAddWordModalOpen, setIsAddWordModalOpen] = useState(false);
   const [isEditWordModalOpen, setIsEditWordModalOpen] = useState(false);
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
+  const location = useLocation();
+
   const queryClient = useQueryClient();
 
   function onAddWordModalOpen() {
@@ -45,6 +48,16 @@ export default function DictionaryPage() {
   function onAddWordModalClose() {
     setIsAddWordModalOpen(false);
   }
+
+  useEffect(() => {
+    if (location.state?.openModal) {
+      Promise.resolve().then(() => {
+        setIsAddWordModalOpen(true);
+      });
+
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   function onEditWordModalOpen() {
     setIsEditWordModalOpen(true);

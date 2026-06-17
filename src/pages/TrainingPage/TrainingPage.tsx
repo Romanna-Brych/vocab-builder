@@ -11,6 +11,7 @@ import ProgressBar from "@/components/ProgressBar/ProgressBar";
 import css from "./TrainingPage.module.css";
 import Modal from "@/components/Modal/Modal";
 import WellDoneModal from "@/components/WellDoneModal/WellDoneModal";
+import EmptyState from "@/components/EmptyState/EmptyState";
 
 function TrainingPage() {
   const navigate = useNavigate();
@@ -44,7 +45,12 @@ function TrainingPage() {
 
   const tasks = data?.tasks ?? [];
 
-  if (tasks.length === 0) return <p>No tasks</p>;
+  if (tasks.length === 0)
+    return (
+      <div className="container">
+        <EmptyState />
+      </div>
+    );
 
   const currentTask = tasks[currentIndex];
 
