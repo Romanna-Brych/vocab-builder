@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-
+import { useState } from "react";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import sprite from "@/assets/icons/sprite.svg";
-
 import css from "./WordActions.module.css";
 
 type Props = {
@@ -10,68 +10,77 @@ type Props = {
 };
 
 export default function WordActions({ onEdit, onDelete }: Props) {
-  const [isOpen, setIsOpen] = useState(false);
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const isOpen = Boolean(anchorEl);
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        wrapperRef.current &&
-        !wrapperRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    }
+  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleEdit = () => {
     onEdit();
-    setIsOpen(false);
+    handleClose();
   };
 
   const handleDelete = () => {
     onDelete();
-    setIsOpen(false);
+    handleClose();
   };
 
   return (
-    <div className={css.wrapper} ref={wrapperRef}>
+    <div className={css.wrapper}>
       <button
         type="button"
         className={css.menuBtn}
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={handleOpen}
         aria-label="Open word actions"
       >
         ...
       </button>
 
-      {isOpen && (
-        <div className={css.menu}>
-          <button type="button" className={css.actionBtn} onClick={handleEdit}>
+      <Menu
+        anchorEl={anchorEl}
+        open={isOpen}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        slotProps={{
+          paper: {
+            className: css.menu,
+          },
+          list: { disablePadding: true },
+        }}
+      >
+        <MenuItem
+          onClick={handleEdit}
+          disableRipple
+          sx={{ p: 0, width: "100%" }}
+        >
+          <button type="button" className={css.actionBtn}>
             <svg className={css.icon}>
               <use href={`${sprite}#icon-edit`} />
             </svg>
             Edit
           </button>
+        </MenuItem>
 
-          <button
-            type="button"
-            className={css.actionBtn}
-            onClick={handleDelete}
-          >
+        <MenuItem
+          onClick={handleDelete}
+          disableRipple
+          sx={{ p: 0, width: "100%" }}
+        >
+          <button type="button" className={css.actionBtn}>
             <svg className={css.icon}>
               <use href={`${sprite}#icon-trash`} />
             </svg>
             Delete
           </button>
-        </div>
-      )}
+        </MenuItem>
+      </Menu>
     </div>
   );
 }
