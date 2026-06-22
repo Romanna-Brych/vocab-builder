@@ -18,6 +18,7 @@ import {
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import { authInitialized } from "./redux/auth/authSlice";
 import Header from "./components/Header/Header";
+import LoadingState from "./components/LoadingState";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -35,11 +36,11 @@ function App() {
   }, [dispatch, token]);
 
   if (!isInitialized || isRefreshing) {
-    return <p>Loading...</p>;
+    return <LoadingState />;
   }
 
   if (isRefreshing) {
-    return <p>Loading...</p>;
+    return <LoadingState />;
   }
 
   return (

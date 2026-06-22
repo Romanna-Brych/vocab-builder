@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 
 import Dashboard from "@/components/Dashboard/Dashboard";
 import WordsTable from "@/components/WordsTable/WordsTable";
@@ -16,6 +16,7 @@ import css from "./RecommendPage.module.css";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import WordsPagination from "@/components/WordsPagination/WordsPagination";
+import LoadingState from "@/components/LoadingState";
 
 const WORDS_LIMIT = 7;
 
@@ -55,6 +56,7 @@ export default function RecommendPage() {
   } = useQuery({
     queryKey: ["allWords", keyword, category, isIrregular, page, WORDS_LIMIT],
     queryFn: () => getAllWords(wordsParams),
+    placeholderData: keepPreviousData,
   });
 
   const { data: statistics } = useQuery({
@@ -104,6 +106,8 @@ export default function RecommendPage() {
     mutate(wordId);
   }
 
+  const isFirstLoading = isCategoriesLoading || (isWordsLoading && !wordsData);
+
   return (
     <main className={css.page}>
       <div className="container">
@@ -119,13 +123,11 @@ export default function RecommendPage() {
           showAddButton={false}
         />
 
-        {isCategoriesLoading && <p>Loading categories...</p>}
+        {isFirstLoading && <LoadingState />}
 
-        {isWordsLoading && <p>Loading words...</p>}
+        {isWordsError && !isFirstLoading && <p>Failed to load words</p>}
 
-        {isWordsError && <p>Failed to load words</p>}
-
-        {wordsData && (
+        {wordsData && !isFirstLoading && (
           <WordsTable
             words={wordsData.results}
             onAddToDictionary={handleAddToDictionary}
@@ -135,7 +137,7 @@ export default function RecommendPage() {
           />
         )}
 
-        {wordsData && wordsData.totalPages > 1 && (
+        {wordsData && wordsData.totalPages > 1 && !isFirstLoading && (
           <WordsPagination
             currentPage={wordsData.page}
             totalPages={wordsData.totalPages}

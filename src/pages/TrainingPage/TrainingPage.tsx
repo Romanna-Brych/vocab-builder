@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
@@ -12,9 +12,11 @@ import css from "./TrainingPage.module.css";
 import Modal from "@/components/Modal/Modal";
 import WellDoneModal from "@/components/WellDoneModal/WellDoneModal";
 import EmptyState from "@/components/EmptyState/EmptyState";
+import LoadingState from "@/components/LoadingState";
 
 function TrainingPage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answer, setAnswer] = useState("");
@@ -30,17 +32,17 @@ function TrainingPage() {
   const { mutate, isPending } = useMutation({
     mutationFn: postAnswers,
     onSuccess: (data: AnswerResult[]) => {
-      console.log("Бекенд відповідь:", data);
       setResults(data);
       setIsResultModalOpen(true);
+      queryClient.invalidateQueries({ queryKey: ["ownWords"] });
+      queryClient.invalidateQueries({ queryKey: ["statistics"] });
     },
-    onError: (error: unknown) => {
+    onError: () => {
       toast.error("Training progress was not saved");
-      console.error(error);
     },
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <LoadingState />;
   if (isError) return <p>Failed to load training tasks</p>;
 
   const tasks = data?.tasks ?? [];
@@ -86,7 +88,6 @@ function TrainingPage() {
   function handleSave() {
     const currentAnswer = createCurrentAnswer();
     const finalAnswers = [...answers, currentAnswer];
-    console.log("Дані, які ми відправляємо на бекенд:", finalAnswers);
     mutate(finalAnswers);
   }
 

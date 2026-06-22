@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 
 import Dashboard from "@/components/Dashboard/Dashboard";
 import WordsTable from "@/components/WordsTable/WordsTable";
@@ -21,6 +21,7 @@ import EditWordForm from "@/components/EditWordForm/EditWordForm";
 import type { Word } from "@/types/word";
 import WordsPagination from "@/components/WordsPagination/WordsPagination";
 import { useLocation } from "react-router-dom";
+import LoadingState from "@/components/LoadingState";
 
 const WORDS_LIMIT = 7;
 
@@ -91,6 +92,7 @@ export default function DictionaryPage() {
   } = useQuery({
     queryKey: ["ownWords", keyword, category, isIrregular, page, WORDS_LIMIT],
     queryFn: () => getOwnWords(wordsParams),
+    placeholderData: keepPreviousData,
   });
 
   const { data: statistics } = useQuery({
@@ -138,6 +140,8 @@ export default function DictionaryPage() {
     mutate(wordId);
   }
 
+  const isFirstLoading = isCategoriesLoading || (isWordsLoading && !wordsData);
+
   return (
     <main className={css.page}>
       <div className="container">
@@ -153,13 +157,11 @@ export default function DictionaryPage() {
           onAddWordClick={onAddWordModalOpen}
         />
 
-        {isCategoriesLoading && <p>Loading categories...</p>}
+        {isFirstLoading && <LoadingState />}
 
-        {isWordsLoading && <p>Loading words...</p>}
+        {isWordsError && !isFirstLoading && <p>Failed to load words</p>}
 
-        {isWordsError && <p>Failed to load words</p>}
-
-        {wordsData && (
+        {wordsData && !isFirstLoading && (
           <WordsTable
             words={wordsData.results}
             onDelete={handleWordDelete}
@@ -182,7 +184,7 @@ export default function DictionaryPage() {
           </Modal>
         )}
 
-        {wordsData && wordsData.totalPages > 1 && (
+        {wordsData && wordsData.totalPages > 1 && !isFirstLoading && (
           <WordsPagination
             currentPage={wordsData.page}
             totalPages={wordsData.totalPages}
