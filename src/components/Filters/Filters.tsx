@@ -85,7 +85,9 @@ export default function Filters({
               name="verbType"
               checked={isIrregular === false}
               onChange={() => onIrregularChange(false)}
+              className={css.radioInput}
             />
+            <span className={css.customRadio} />
             Regular
           </label>
 
@@ -95,7 +97,9 @@ export default function Filters({
               name="verbType"
               checked={isIrregular === true}
               onChange={() => onIrregularChange(true)}
+              className={css.radioInput}
             />
+            <span className={css.customRadio} />
             Irregular
           </label>
         </div>
