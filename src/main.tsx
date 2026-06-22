@@ -9,6 +9,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import App from "./App";
 import { persistor, store } from "./redux/store";
 
+import "modern-normalize";
 import "./index.css";
 
 const queryClient = new QueryClient();
