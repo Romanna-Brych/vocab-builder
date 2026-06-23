@@ -211,9 +211,12 @@
   }
 
   .actionsCell,
-  .recommendTable .actionsCell,
   .dictionaryTable .actionsCell {
     width: 66px;
+  }
+
+  .recommendTable .actionsCell {
+    width: 160px;
   }
 
   .flagIcon {
