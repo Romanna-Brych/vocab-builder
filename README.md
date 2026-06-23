@@ -2,7 +2,7 @@
 
 VocabBuilder is a responsive web application for learning English vocabulary. Users can create and manage their own dictionary, discover recommended words, and improve memorization through interactive training sessions.
 
-![VocabBuilder](./assets/preview.png)
+![VocabBuilder](./src/assets/preview.png)
 
 ## Demo
 
